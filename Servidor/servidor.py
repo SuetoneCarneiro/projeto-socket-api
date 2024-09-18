@@ -33,15 +33,16 @@ class Servidor:
             dados = con.recv(1024).decode('utf-8').strip()  #recebe os dados do cliente no formato bytes; decodifica e remove espaços
             if not dados:
                 return
-            altura, peso = map(float, dados.split(',')) #aplica float e atribui a dados 
-            imc = peso / (altura * altura)
+            peso, altura = map(float, dados.split(',')) #60, 120  #aplica float e atribui a dados 
+            altura_f = altura//100
+            imc = peso / (altura_f ** 2)
             if imc < 18.5:
                 classificacao = "Abaixo do peso"
-            elif 18.5 <= imc < 25:
+            elif imc <= 18.5 and imc < 25:
                 classificacao = "Peso normal"
-            elif 25 <= imc < 30:
+            elif imc >= 25 and imc < 30:
                 classificacao = "Sobrepeso"
-            elif 30 <= imc < 40:
+            elif imc >= 30 and  imc < 40:
                 classificacao = "Obesidade"
             else:
                 classificacao = "Obesidade grave"
