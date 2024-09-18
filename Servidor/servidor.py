@@ -29,3 +29,26 @@ class Servidor:
         '''
         Implementa o serviço de calculadora de IMC
         '''
+        try:
+            dados = con.recv(1024).decode('utf-8').strip()  #recebe os dados do cliente no formato bytes; decodifica e remove espaços
+            if not dados:
+                return
+            altura, peso = map(float, dados.split(',')) #aplica float e atribui a dados 
+            imc = peso / (altura * altura)
+            if imc < 18.5:
+                classificacao = "Abaixo do peso"
+            elif 18.5 <= imc < 25:
+                classificacao = "Peso normal"
+            elif 25 <= imc < 30:
+                classificacao = "Sobrepeso"
+            elif 30 <= imc < 40:
+                classificacao = "Obesidade"
+            else:
+                classificacao = "Obesidade grave"
+            con.sendall(classificacao.encode('utf-8')) #envia os dados ao cliente 
+         
+        except Exception as e:
+            print('Erro ao processar dados do cliente', e)
+
+        finally:
+            con.close() 
