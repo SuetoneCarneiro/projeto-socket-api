@@ -23,4 +23,19 @@ class Cliente:
         Método que implementa as requisições do cliente
         '''
         # implementar interação com o cliente
-        
+        try:
+            dados = ''
+            # altura = ''
+            while dados != 'x':
+                dados = input("Calculadora IMC\n (digite 'x' para sair)\nDigite o seu peso (kg) e sua altura (cm): ")
+                # altura = input("(digite 'x' para sair)/nDigite a sua altura: ")
+                if dados == '':
+                    continue
+                elif dados == 'x':
+                    break
+                self._tcp.send(bytes(dados, 'ascii'))
+                resp = self._tcp.recv(1024)
+                print("= ", resp.decode('ascii'))
+            self._tcp.close()
+        except Exception as e:
+            print("Erro ao realizar a comunicação com o servidor", e)
