@@ -29,13 +29,15 @@ class Servidor:
         '''
         Implementa o serviço de calculadora de IMC
         '''
-        print ("Atendendo cliente", cliente)
-        while True: 
-            try:
+        try: 
+            print ("Atendendo cliente", cliente)
+            while True: 
                 dados = con.recv(1024)
                 dados_d=str(dados.decode('ascii'))  #recebe os dados do cliente no formato bytes; decodifica e remove espaços
                 if not dados_d:
-                    return
+                    print(f"Conexão encerrada pelo cliente {cliente}")
+                    break 
+                print(f"Recebido: {dados}")
                 peso, altura = map(float, dados_d.split(',')) #60, 120  #aplica float e atribui a dados 
                 altura_f = altura/100
                 imc = peso / (altura_f ** 2)
@@ -52,12 +54,9 @@ class Servidor:
                 
                 con.send(classificacao.encode('ascii')) #envia os dados ao cliente 
                 print (cliente, "Requisição atendida")
-            except OSError as e:
-                print ('Erro na coxeção', cliente, e.args)
-            except Exception as e:
-                print('Erro ao processar dados do cliente', e.args)
-                con.send(bytes("Erro", 'ascii'))
-            
-            finally:
-                con.close() 
+        except OSError as e:
+            print ("Erro de socket', {e}")
+        finally:
+            print(f"Fechando a conexão com {cliente}")
+            con.close() 
 
