@@ -34,9 +34,9 @@ class Servidor:
             try:
                 dados = con.recv(1024)
                 dados_d=str(dados.decode('ascii'))  #recebe os dados do cliente no formato bytes; decodifica e remove espaços
-                if not dados:
+                if not dados_d:
                     return
-                peso, altura = map(float, dados.split(',')) #60, 120  #aplica float e atribui a dados 
+                peso, altura = map(float, dados_d.split(',')) #60, 120  #aplica float e atribui a dados 
                 altura_f = altura/100
                 imc = peso / (altura_f ** 2)
                 if imc < 18.5:
