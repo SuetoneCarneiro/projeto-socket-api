@@ -29,27 +29,35 @@ class Servidor:
         '''
         Implementa o serviço de calculadora de IMC
         '''
-        try:
-            dados = con.recv(1024).decode('utf-8').strip()  #recebe os dados do cliente no formato bytes; decodifica e remove espaços
-            if not dados:
-                return
-            peso, altura = map(float, dados.split(',')) #60, 120  #aplica float e atribui a dados 
-            altura_f = altura//100
-            imc = peso / (altura_f ** 2)
-            if imc < 18.5:
-                classificacao = "Abaixo do peso"
-            elif imc <= 18.5 and imc < 25:
-                classificacao = "Peso normal"
-            elif imc >= 25 and imc < 30:
-                classificacao = "Sobrepeso"
-            elif imc >= 30 and  imc < 40:
-                classificacao = "Obesidade"
-            else:
-                classificacao = "Obesidade grave"
-            con.sendall(classificacao.encode('utf-8')) #envia os dados ao cliente 
-         
-        except Exception as e:
-            print('Erro ao processar dados do cliente', e)
+        print ("Atendendo cliente", cliente)
+        while True: 
+            try:
+                dados = con.recv(1024)
+                dados_d=str(dados.decode('ascii'))  #recebe os dados do cliente no formato bytes; decodifica e remove espaços
+                if not dados:
+                    return
+                peso, altura = map(float, dados.split(',')) #60, 120  #aplica float e atribui a dados 
+                altura_f = altura/100
+                imc = peso / (altura_f ** 2)
+                if imc < 18.5:
+                    classificacao = "Abaixo do peso"
+                elif 18.5 <= imc < 25:
+                    classificacao = "Peso normal"
+                elif 25 <= imc < 30:
+                    classificacao = "Sobrepeso"
+                elif 30 <= imc < 40:
+                 classificacao = "Obesidade"
+                else:
+                    classificacao = "Obesidade grave"
+                
+                con.send(classificacao.encode('ascii')) #envia os dados ao cliente 
+                print (cliente, "Requisição atendida")
+            except OSError as e:
+                print ('Erro na coxeção', cliente, e.args)
+            except Exception as e:
+                print('Erro ao processar dados do cliente', e.args)
+                con.send(bytes("Erro", 'ascii'))
+            
+            finally:
+                con.close() 
 
-        finally:
-            con.close() 
