@@ -1,10 +1,12 @@
 import socket
+import threading
 
 class Servidor:
     def __init__(self, host, porta) -> None:
         self._host = host
         self._porta = porta
-        self._tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+        self._tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._threads = {}
         # AF_INET -> especifica a familia internet -> Nosso programa poderá se comunicar com qualquer endereço IPV4
         # SOCK_STREAM -> indicamos que vamos trabalhar com TCP
 
@@ -15,11 +17,13 @@ class Servidor:
         servidor = (self._host, self._porta)
         try:
             self._tcp.bind(servidor)
-            self._tcp.listen(1)
+            self._tcp.listen(5)
             print('O servidor foi iniciado em ', self._host, ':', self._porta)
             while True:
                 con, cliente = self._tcp.accept()
-                self._servico(con, cliente)
+                # As duas linhas abaixo servem para o servidor atender a diversos clientes em paralelo usando threads
+                self._threads[cliente] = threading.Thread(target=self._servico, args=(con, cliente))
+                self._threads[cliente].start() # comando não bloqueante
                 # con -> objeto socket utilizado para envio e recebimento de dados
                 # cliente -> endereço e porta do cliente
         except Exception as e:
