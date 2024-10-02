@@ -13,29 +13,75 @@ class Cliente:
         cliente = (self._ip_servidor, self._porta)
         try:
             self._tcp.connect(cliente)
+            resposta = self._tcp.recv(1024).decode('ascii')
+            print('Resposta do servidor', resposta)
             print('Conexão estabelecida') 
-            self._metodo()
+            self._menu_interacao()
         except Exception as e:
             print('Erro na conexão: ', e.args)
 
-    def _metodo(self):
+    def _menu_interacao(self):
+        '''
+        Implementa opções de interação com o cliente
+        '''
+        try:
+            while True:
+                print("\nOpções:\n1 - Calcular IMC\n2 - Cadastrar na Fila de Espera\nx - Sair")
+                opcao = input("Escolha uma opção: ")
+
+                if opcao == '1':
+                    self._metodo_imc()
+                elif opcao == '2':
+                    self._cadastrar_fila_espera()
+                elif opcao.lower() == 'x':
+                    print("Encerrando a conexão...")
+                    self._tcp.send(bytes("ENCERRAR\n", 'ascii')) 
+                    reply = self._tcp.recv(1024).decode('ascii')
+                    print(reply) # Informa ao servidor que o cliente deseja encerrar
+                    break
+                else:
+                    print("Opção inválida! Tente novamente.")
+            
+            self._tcp.close()
+
+        except Exception as e:
+            print("Erro ao realizar a comunicação com o servidor", e)
+            self._tcp.send(bytes("#ERRO#\n", 'ascii'))  # Envia erro para o servidor
+
+    def _metodo_imc(self):
         '''
         Método que implementa as requisições do cliente
         '''
-        # implementar interação com o cliente
         try:
-            dados = ''
-            # altura = ''
-            while dados != 'x':
-                dados = input("Calculadora IMC\n (digite 'x' para sair)\nDigite o seu peso (kg) e sua altura (cm): ")
-                # altura = input("(digite 'x' para sair)/nDigite a sua altura: ")
-                if dados == '':
-                    continue
-                elif dados == 'x':
-                    break
+            peso = input("Digite o seu peso (kg): ")
+            altura = input("Digite a sua altura (cm): ")
+            if peso and altura:  # Verifica se os dados foram preenchidos
+                dados = f"CALCULO_IMC=> PESO(kg), ALTURA(cm)|{peso},{altura}\n"  # Formato de envio
                 self._tcp.send(bytes(dados, 'ascii'))
-                resp = self._tcp.recv(1024)
-                print("= ", resp.decode('ascii'))
-            self._tcp.close()
+                resposta = self._tcp.recv(1024)
+                print("Resposta do servidor: ", resposta.decode('ascii'))
+            else:
+                print("Dados inválidos. Tente novamente.")
         except Exception as e:
-            print("Erro ao realizar a comunicação com o servidor", e)
+            print("Erro ao enviar dados para o cálculo de IMC: ", e)
+
+    def _cadastrar_fila_espera(self):
+        '''
+        Método para enviar o nome e telefone para cadastro na fila de espera
+        '''
+        try:
+            nome = input("Digite o seu nome: ")
+            telefone = input("Digite o seu telefone: ")
+            if nome and telefone:  # Verifica se os dados foram preenchidos
+                dados = f"CADASTRAR=> NOME, TELEFONE|{nome},{telefone}\n"  # Formato de envio
+                self._tcp.send(bytes(dados, 'ascii'))
+                resposta = self._tcp.recv(1024)
+                print("Resposta do servidor: ", resposta.decode('ascii'))
+            else:
+                print("Dados inválidos. Tente novamente.")
+        except Exception as e:
+            print("Erro ao enviar dados de cadastro: ", e)
+
+# Exemplo de uso
+# cliente = Cliente('127.0.0.1', 5000)
+# cliente.start()
