@@ -15,7 +15,6 @@ class Cliente:
             self._tcp.connect(cliente)
             resposta = self._tcp.recv(1024).decode('ascii')
             print(resposta)
-            #print('Conexão estabelecida') 
             self._menu_interacao()
         except Exception as e:
             print('Erro na conexão: ', e.args)
@@ -60,7 +59,6 @@ class Cliente:
             if peso and altura:  # Verifica se os dados foram preenchidos
                 dados = f"CALCULO_IMC=> PESO(kg), ALTURA(cm)|{peso},{altura}\n"  # Formato de envio
                 self._tcp.send(bytes(dados, 'ascii'))
-                #server_msg = self._tcp.recv(1024)
                 resposta = self._tcp.recv(1024)
                 print(resposta.decode('ascii'))
             else:

@@ -62,7 +62,6 @@ class Servidor:
         finally:
             print(f"Fechando a conexão com {cliente}")
             con.send(bytes('\nCONF-X\n', 'ascii')) # Mensagem de encerramento confirmado
-            #con.send(bytes(f"ENCERRAMENTO CONFIRMADO|A conexao foi encerrada.\n", 'ascii'))  # Inclui quebra de linha
             con.close()
 
 
@@ -90,7 +89,6 @@ class Servidor:
                 classificacao = "Obesidade grave"
 
             # Envia o resultado ao cliente
-            #con.send(bytes('CONF-IMC', 'ascii'))
             con.send(bytes(f"\nIMC_RESULTADO|{classificacao}\n", 'ascii'))  # Inclui quebra de linha
         else:
             con.send(bytes("\n#ERRO-CLI#\n", 'ascii'))
@@ -108,8 +106,7 @@ class Servidor:
 
         # Envia a confirmação ao cliente
         con.send(bytes('\nCONF-CAD', 'ascii'))
-        #con.send(bytes("CADASTRO_CONFIRMADO|Voce foi cadastrado com sucesso na fila de espera.\n", 'ascii'))  # Inclui quebra de linha
-
+        
     def _buscar_posicao_na_fila(self, nome, telefone):
         '''
         Função que busca a posição de um cliente na fila de espera com base no nome e telefone
