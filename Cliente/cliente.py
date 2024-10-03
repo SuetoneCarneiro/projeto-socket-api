@@ -14,8 +14,8 @@ class Cliente:
         try:
             self._tcp.connect(cliente)
             resposta = self._tcp.recv(1024).decode('ascii')
-            print('Resposta do servidor', resposta)
-            print('Conexão estabelecida') 
+            print(resposta)
+            #print('Conexão estabelecida') 
             self._menu_interacao()
         except Exception as e:
             print('Erro na conexão: ', e.args)
@@ -37,7 +37,7 @@ class Cliente:
                     self._ver_fila_espera()
                 elif opcao.lower() == 'x':
                     print("Encerrando a conexão...")
-                    self._tcp.send(bytes("ENCERRAR\n", 'ascii')) 
+                    self._tcp.send(bytes("ENCERRAR\n", 'ascii'))
                     reply = self._tcp.recv(1024).decode('ascii')
                     print(reply) # Informa ao servidor que o cliente deseja encerrar
                     break
@@ -60,8 +60,9 @@ class Cliente:
             if peso and altura:  # Verifica se os dados foram preenchidos
                 dados = f"CALCULO_IMC=> PESO(kg), ALTURA(cm)|{peso},{altura}\n"  # Formato de envio
                 self._tcp.send(bytes(dados, 'ascii'))
+                #server_msg = self._tcp.recv(1024)
                 resposta = self._tcp.recv(1024)
-                print("Resposta do servidor: ", resposta.decode('ascii'))
+                print(resposta.decode('ascii'))
             else:
                 print("Dados inválidos. Tente novamente.")
         except Exception as e:
@@ -78,7 +79,7 @@ class Cliente:
                 dados = f"CADASTRAR=> NOME, TELEFONE|{nome},{telefone}\n"  # Formato de envio
                 self._tcp.send(bytes(dados, 'ascii'))
                 resposta = self._tcp.recv(1024)
-                print("Resposta do servidor: ", resposta.decode('ascii'))
+                print(resposta.decode('ascii'))
             else:
                 print("Dados inválidos. Tente novamente.")
         except Exception as e:

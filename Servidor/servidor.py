@@ -21,7 +21,7 @@ class Servidor:
             while True:
                 con, cliente = self._tcp.accept()
                 print(f"Cliente {cliente} conectado.")
-                con.send(bytes("+OK\n", 'ascii'))
+                con.send(bytes("\nLSL-OK\n", 'ascii'))
                 self._threads[cliente] = threading.Thread(target=self._servico, args=(con, cliente))
                 self._threads[cliente].start()  # comando não bloqueante
         except Exception as e:
@@ -50,7 +50,7 @@ class Servidor:
                     nome, telefone = valores.split(',')
                     posicao = self._buscar_posicao_na_fila(nome, telefone)
                     if posicao is not None:
-                        con.send(bytes(f"SUA_POSICAO|Você está na posição {posicao}.\n", 'utf-8'))
+                        con.send(bytes(f"\nSUA_POSICAO|Você está na posição {posicao}.\n", 'utf-8'))
                     else:
                         con.send(bytes("NAO_ENCONTRADO|Você não está na lista de espera.\n", 'utf-8'))
                 elif dados == "ENCERRAR":
@@ -61,7 +61,8 @@ class Servidor:
             print("Erro de socket:", e)
         finally:
             print(f"Fechando a conexão com {cliente}")
-            con.send(bytes(f"ENCERRAMENTO CONFIRMADO|A conexao foi encerrada.\n", 'ascii'))  # Inclui quebra de linha
+            con.send(bytes('\nCONF-X\n', 'ascii')) # Mensagem de encerramento confirmado
+            #con.send(bytes(f"ENCERRAMENTO CONFIRMADO|A conexao foi encerrada.\n", 'ascii'))  # Inclui quebra de linha
             con.close()
 
 
@@ -70,24 +71,29 @@ class Servidor:
         Processa o cálculo do IMC e envia o resultado ao cliente
         '''
         _, valores = dados.split('|')
-        peso, altura = map(float, valores.split(','))
-        altura_f = altura / 100
-        imc = peso / (altura_f ** 2)
+        check = valores.split(',')
+        if check[0].isnumeric() and check[1].isnumeric():
+            peso, altura = map(float, valores.split(','))
+            altura_f = altura / 100
+            imc = peso / (altura_f ** 2)
 
-        # Classifica o IMC
-        if imc < 18.5:
-            classificacao = "Abaixo do peso"
-        elif 18.5 <= imc < 25:
-            classificacao = "Peso normal"
-        elif 25 <= imc < 30:
-            classificacao = "Sobrepeso"
-        elif 30 <= imc < 40:
-            classificacao = "Obesidade"
+            # Classifica o IMC
+            if imc < 18.5:
+                classificacao = "Abaixo do peso"
+            elif 18.5 <= imc < 25:
+                classificacao = "Peso normal"
+            elif 25 <= imc < 30:
+                classificacao = "Sobrepeso"
+            elif 30 <= imc < 40:
+                classificacao = "Obesidade"
+            else:
+                classificacao = "Obesidade grave"
+
+            # Envia o resultado ao cliente
+            #con.send(bytes('CONF-IMC', 'ascii'))
+            con.send(bytes(f"\nIMC_RESULTADO|{classificacao}\n", 'ascii'))  # Inclui quebra de linha
         else:
-            classificacao = "Obesidade grave"
-
-        # Envia o resultado ao cliente
-        con.send(bytes(f"IMC_RESULTADO|{classificacao}\n", 'ascii'))  # Inclui quebra de linha
+            con.send(bytes("\n#ERRO-CLI#\n", 'ascii'))
 
     def _processar_cadastro(self, dados, con):
         '''
@@ -101,7 +107,8 @@ class Servidor:
             f.write(f"{nome},{telefone}\n")
 
         # Envia a confirmação ao cliente
-        con.send(bytes("CADASTRO_CONFIRMADO|Voce foi cadastrado com sucesso na fila de espera.\n", 'ascii'))  # Inclui quebra de linha
+        con.send(bytes('\nCONF-CAD', 'ascii'))
+        #con.send(bytes("CADASTRO_CONFIRMADO|Voce foi cadastrado com sucesso na fila de espera.\n", 'ascii'))  # Inclui quebra de linha
 
     def _buscar_posicao_na_fila(self, nome, telefone):
         '''
