@@ -26,13 +26,15 @@ class Cliente:
         '''
         try:
             while True:
-                print("\nOpções:\n1 - Calcular IMC\n2 - Cadastrar na Fila de Espera\nx - Sair")
+                print("\nOpções:\n1 - Calcular IMC\n2 - Cadastrar na Fila de Espera\n3 - Ver posição na Fila de Espera\nx - Sair")
                 opcao = input("Escolha uma opção: ")
 
                 if opcao == '1':
                     self._metodo_imc()
                 elif opcao == '2':
                     self._cadastrar_fila_espera()
+                elif opcao == '3':
+                    self._ver_fila_espera()
                 elif opcao.lower() == 'x':
                     print("Encerrando a conexão...")
                     self._tcp.send(bytes("ENCERRAR\n", 'ascii')) 
@@ -82,6 +84,20 @@ class Cliente:
         except Exception as e:
             print("Erro ao enviar dados de cadastro: ", e)
 
-# Exemplo de uso
-# cliente = Cliente('127.0.0.1', 5000)
-# cliente.start()
+    def _ver_fila_espera(self):
+        '''
+        Método para solicitar a posição na fila de espera ao servidor
+        '''
+        try:
+            nome = input("Digite o seu nome: ")
+            telefone = input("Digite o seu telefone: ")
+            if nome and telefone:  # Verifica se os dados foram preenchidos
+                dados = f"VER_POSICAO|{nome},{telefone}"
+                self._tcp.send(bytes(dados, 'utf-8'))  # Envia a solicitação para o servidor
+                resposta = self._tcp.recv(1024).decode('utf-8')  # Recebe a resposta do servidor
+                print("Sua posição na fila:\n", resposta)
+            else:
+                print("Dados inválidos. Tente novamente.")
+        except Exception as e:
+            print("Erro ao solicitar a posição na fila de espera: ", e)
+

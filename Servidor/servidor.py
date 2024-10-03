@@ -45,6 +45,14 @@ class Servidor:
                     self._processar_imc(dados, con)
                 elif dados.startswith("CADASTRAR"):
                     self._processar_cadastro(dados, con)
+                elif dados.startswith("VER_POSICAO"):
+                    _, valores = dados.split('|')
+                    nome, telefone = valores.split(',')
+                    posicao = self._buscar_posicao_na_fila(nome, telefone)
+                    if posicao is not None:
+                        con.send(bytes(f"SUA_POSICAO|Você está na posição {posicao}.\n", 'utf-8'))
+                    else:
+                        con.send(bytes("NAO_ENCONTRADO|Você não está na lista de espera.\n", 'utf-8'))
                 elif dados == "ENCERRAR":
                     print(f"Cliente {cliente} encerrou a conexão.")
                     break
@@ -94,4 +102,21 @@ class Servidor:
 
         # Envia a confirmação ao cliente
         con.send(bytes("CADASTRO_CONFIRMADO|Voce foi cadastrado com sucesso na fila de espera.\n", 'ascii'))  # Inclui quebra de linha
+
+    def _buscar_posicao_na_fila(self, nome, telefone):
+        '''
+        Função que busca a posição de um cliente na fila de espera com base no nome e telefone
+        '''
+        try:
+            with open('fila_espera.txt', 'r') as f:
+                lista = f.readlines()
+
+            for idx, linha in enumerate(lista):
+                nome_fila, telefone_fila = linha.strip().split(',')
+                if nome_fila == nome and telefone_fila == telefone:
+                    return idx + 1  # Posições começam em 1
+
+            return None  # Retorna None se o cliente não for encontrado
+        except FileNotFoundError:
+            return None
 
