@@ -2,14 +2,15 @@
 Projeto desenvolvido na disciplina de <strong>Protocolos de Interconexões de Redes de Computadores</strong> do curso de Sistemas para Internet do IFPB, ministrada pelo professor Leonidas Lima. Esse projeto tem o cunho de produzir uma aplicação usando API de Sockets para uma clínica de nutricionistas.
 
 
-* [🔧 Funcionalidades/Protocolo de aplicação](#-funcionalidadesprotocolo-de-aplicação)
-    * [1.📱 Calcular IMC ](#1--calcular-imc)
-    * [2. 👥 Cadastrar na Fila de Espera](#2--cadastrar-na-fila-de-espera)
-    * [3. ⏳ Ver posição na Fila de Espera](#3--ver-posição-na-fila-de-espera)
-* [📂 Arquivos do projeto](#-arquivos-do-projeto)
-* [🐍 Pré-requisitos para execução](#-pré-requisitos-para-execução)
-* [📖 Instruções para execução](#-instruções-para-execução)
-* [⭐ Autores](#-autores)
+* 1. [🔧 Funcionalidades/Protocolo de aplicação](#-funcionalidadesprotocolo-de-aplicação)
+        * [1.1 📱 Calcular IMC ](#1--calcular-imc)
+        * [1.2 👥 Cadastrar na Fila de Espera](#2--cadastrar-na-fila-de-espera)
+        * [1.3 ⏳ Ver posição na Fila de Espera](#3--ver-posição-na-fila-de-espera)
+        * [1.4 💌 Mensagens do protocolo](#4--mensagens-do-protocolo)
+* 2. [📂 Arquivos do projeto](#-arquivos-do-projeto)
+* 3. [🐍 Pré-requisitos para execução](#-pré-requisitos-para-execução)
+* 4. [📖 Instruções para execução](#-instruções-para-execução)
+* 5. [⭐ Autores](#-autores)
 
 ## 🔧 Funcionalidades/Protocolo de aplicação
 
