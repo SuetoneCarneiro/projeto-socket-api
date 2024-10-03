@@ -28,6 +28,23 @@ Projeto desenvolvido na disciplina de <strong>Protocolos de Interconexões de Re
 ### 3. ⏳ Ver posição na Fila de Espera
    - **Descrição:** Ao digitar o número `3`, a função `Ver posição na Fila de Espera` é a responsável por realizar a consulta do índice do cadastro realizado anteriormente, pedindo o `nome` e `telefone`, retornando como a `posição` que o usuário se encontra.
 
+### 4. 💌 Mensagens do protocolo
+  - **Descrição:** Assim como nos protocolos estudados na disciplina, o nosso protocolo conta com mensagens padrão para confirmar a conexão, a realização de operações e o fechamento de conexão entre as partes da aplicação. Veja no quadro a seguir a descrição das mensagens:
+
+-|  Mensagem              |Significado                          |
+-|------------------------|-------------------------------------|
+-| *LSL-OK* | Confirmação de conexão entre cliente e servidor        | 
+-| *CONF-X*         |Confirmação de fechamento de conexão         |  
+-| *#ERRO-CLI#*          |Indica que o cliente inseriu dados inválidos no cálculo de IMC|
+-|*CONF-CAD*          | Indica confirmação de um cadastro|
+
+Além disso, temos também as mensagens de resposta com as operações relizadas no servidor:
+- SUA_POSICAO|Você está na posição {posicao}
+- NAO_ENCONTRADO|Você não está na lista de espera.
+- IMC_RESULTADO|{classificacao}
+
+*Obs.: O que está entre chaves '{}' é calculado e devolvido pelo servidor*
+
 ## 📂 Arquivos do projeto
 ```
 projeto-socket-api/
@@ -59,6 +76,13 @@ projeto-socket-api/
     ```
     python Cliente/main.py
     ```
+4. Você pode também rodar o cliente passando como parâmetros o IP e a porta do servidor:
+    ```
+    python Cliente/main.py 192.168.0.X 9000
+    ```
+
+  *Obs.: em sistemas operacionais Linux/mac, troque `python` por `python3`*
+
 
 ## ⭐ Autores
 <table>
