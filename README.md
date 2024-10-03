@@ -31,12 +31,12 @@ Projeto desenvolvido na disciplina de <strong>Protocolos de Interconexões de Re
 ### 4. 💌 Mensagens do protocolo
   - **Descrição:** Assim como nos protocolos estudados na disciplina, o nosso protocolo conta com mensagens padrão para confirmar a conexão, a realização de operações e o fechamento de conexão entre as partes da aplicação. Veja no quadro a seguir a descrição das mensagens:
 
--|  Mensagem              |Significado                          |
--|------------------------|-------------------------------------|
--| *LSL-OK* | Confirmação de conexão entre cliente e servidor        | 
--| *CONF-X*         |Confirmação de fechamento de conexão         |  
--| *#ERRO-CLI#*          |Indica que o cliente inseriu dados inválidos no cálculo de IMC|
--|*CONF-CAD*          | Indica confirmação de um cadastro|
+|  Mensagem              |Significado                          |
+|------------------------|-------------------------------------|
+| *LSL-OK* | Confirmação de conexão entre cliente e servidor        | 
+| *CONF-X*         |Confirmação de fechamento de conexão         |  
+| *#ERRO-CLI#*          |Indica que o cliente inseriu dados inválidos no cálculo de IMC|
+|*CONF-CAD*          | Indica confirmação de um cadastro|
 
 Além disso, temos também as mensagens de resposta com as operações relizadas no servidor:
 - SUA_POSICAO|Você está na posição {posicao}
