@@ -95,9 +95,9 @@ class Cliente:
                 dados = f"VER_POSICAO|{nome},{telefone}"
                 self._tcp.send(bytes(dados, 'utf-8'))  # Envia a solicitação para o servidor
                 resposta = self._tcp.recv(1024).decode('utf-8')  # Recebe a resposta do servidor
-                print("Sua posição na fila:\n", resposta)
+                print(resposta)
             else:
-                print("Dados inválidos. Tente novamente.")
+                print("Dados invalidos. Tente novamente.")
         except Exception as e:
-            print("Erro ao solicitar a posição na fila de espera: ", e)
+            print("Erro ao solicitar a posicao na fila de espera: ", e)
 
